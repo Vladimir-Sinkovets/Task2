@@ -1,3 +1,6 @@
+using Task2.Services.XLSFileManager;
+using Task2.Services.XLSFileManagers;
+
 namespace Task2
 {
     public class Program
@@ -8,6 +11,8 @@ namespace Task2
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddTransient<IXLSFileManager, XLSFileManager>();
 
             var app = builder.Build();
 
