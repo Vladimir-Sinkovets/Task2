@@ -1,20 +1,27 @@
-﻿using Task2.Services.XLSXFileManager;
+﻿using Task2.Services.XLSXFileManagers.Models;
 using OfficeOpenXml;
+using Aspose.Cells;
 
 namespace Task2.Services.XLSXFileManagers
 {
     public class XLSXFileManager : IXLSXFileManager
     {
-        public void UploadToDatabase(string fileName)
+        public void SaveAndUploadToDataBase(IFormFile uploadedFile, string path)
         {
-            ExcelPackage excelFile = new ExcelPackage(new FileInfo(fileName));
+            var xlsxPath = SaveFile(uploadedFile, path);
 
-            ExcelWorksheet worksheet = excelFile.Workbook.Worksheets[0];
+            UploadToDatabase(xlsxPath);
+        }
+
+        private void UploadToDatabase(string fileName)
+        {
+            var excelFile = new ExcelPackage(new FileInfo(fileName));
+
+            var worksheet = excelFile.Workbook.Worksheets[0];
 
             var totalRows = worksheet.Dimension.End.Row;
-            var totalColumns = worksheet.Dimension.End.Column;
 
-            List<Record> list = new List<Record>();
+            var list = new List<Record>();
 
             string currentClass = (string) worksheet.Cells[9, 1].Value;
 
@@ -37,7 +44,7 @@ namespace Task2.Services.XLSXFileManagers
 
                 if ((string)A == "ПО КЛАССУ" || (string)A == "БАЛАНС")
                     continue;
-                    
+
 
                 list.Add(new Record() 
                 {
@@ -50,15 +57,16 @@ namespace Task2.Services.XLSXFileManagers
                 });
             }
         }
-    }
 
-    internal class Record
-    {
-        public string Account { get; set; }
-        public string ClassName { get; set; }
-        public double OpeningBalanceLiabilities { get; set; }
-        public double OpeningBalanceAsset { get; set; }
-        public double TurnoverCredit { get; set; }
-        public double TurnoverDebit { get; set; }
+        private string SaveFile(IFormFile uploadedFile, string path)
+        {
+            var workbook = new Workbook(uploadedFile.OpenReadStream());
+
+            using var fileStream = new FileStream(path + "x", FileMode.Create);
+
+            workbook.Save(fileStream, SaveFormat.Xlsx);
+
+            return path + "x";
+        }
     }
 }

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
-using Task2.Services.XLSXFileManager;
+using Task2.Services.XLSXFileManagers;
 
 namespace Task2.Controllers
 {
@@ -24,15 +24,7 @@ namespace Task2.Controllers
             {
                 string path = "/Files/" + uploadedFile.FileName;
 
-                var workbook = new Workbook(uploadedFile.OpenReadStream());
-
-                using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path + "x", FileMode.Create))
-                {
-                    workbook.Save(fileStream, SaveFormat.Xlsx);
-                    //await uploadedFile.CopyToAsync(fileStream);
-                }
-
-                _xlsFileManager.UploadToDatabase(_appEnvironment.WebRootPath + path + "x");
+                _xlsFileManager.SaveAndUploadToDataBase(uploadedFile, _appEnvironment.WebRootPath + path);
             }
             return View();
         }
