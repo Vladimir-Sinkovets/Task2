@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aspose.Cells" Version="22.11.0" />
+    <PackageReference Include="EPPlus" Version="6.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\Files\" />
   </ItemGroup>
 

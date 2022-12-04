@@ -1,5 +1,6 @@
-using Task2.Services.XLSFileManager;
-using Task2.Services.XLSFileManagers;
+using OfficeOpenXml;
+using Task2.Services.XLSXFileManagers;
+using Task2.Services.XLSXFileManagers;
 
 namespace Task2
 {
@@ -7,12 +8,14 @@ namespace Task2
     {
         public static void Main(string[] args)
         {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddTransient<IXLSFileManager, XLSFileManager>();
+            builder.Services.AddTransient<IXLSXFileManager, XLSXFileManager>();
 
             var app = builder.Build();
 
