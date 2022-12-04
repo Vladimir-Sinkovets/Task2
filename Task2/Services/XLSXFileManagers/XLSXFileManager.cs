@@ -26,6 +26,10 @@ namespace Task2.Services.XLSXFileManagers
             return _context.Files;
         }
 
+        public IEnumerable<Record> GetRecordsByFile(int fileId)
+        {
+            return _context.Records.Where(r => r.FileId == fileId);
+        }
 
 
         private async Task UploadToDatabaseAsync(string fileName)

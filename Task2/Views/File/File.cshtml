@@ -1,0 +1,30 @@
+﻿@model IEnumerable<Record>
+
+<table class="table table-sm">
+    @foreach (var record in Model)
+    {
+        <tr>
+            <td>
+                @record.Account
+            </td>
+            <td>
+                @record.OpeningBalanceAsset
+            </td>
+            <td>
+                @record.OpeningBalanceLiabilities
+            </td>
+            <td>
+                @record.TurnoverDebit
+            </td>
+            <td>
+                @record.TurnoverCredit
+            </td>
+            <td>
+                00
+            </td>
+            <td>
+                00
+            </td>
+        </tr>
+    }
+</table>

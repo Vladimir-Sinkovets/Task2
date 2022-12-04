@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
+using Task2.Models;
 using Task2.Services.XLSXFileManagers;
 
 namespace Task2.Controllers
@@ -35,6 +36,16 @@ namespace Task2.Controllers
             var files = _xlsxFileManager.GetAllFiles();
 
             return View(files);
+        }
+
+        [HttpGet]
+        public IActionResult File(int fileId)
+        {
+            IEnumerable<Record> records = _xlsxFileManager.GetRecordsByFile(fileId)
+                .OrderBy(r => r.Account);
+
+
+            return View(records);
         }
 
         [HttpGet]
