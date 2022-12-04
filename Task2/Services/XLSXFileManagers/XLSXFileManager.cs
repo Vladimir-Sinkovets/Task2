@@ -76,7 +76,7 @@ namespace Task2.Services.XLSXFileManagers
                 yield return new Record()
                 {
                     ClassName = currentClass,
-                    Account = (string)A,
+                    AccountNumber = (string)A,
                     OpeningBalanceAsset = (double)B,
                     OpeningBalanceLiabilities = (double)C,
                     TurnoverDebit = (double)D,
