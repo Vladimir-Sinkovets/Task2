@@ -1,7 +1,11 @@
-﻿namespace Task2.Services.XLSXFileManagers
+﻿using Task2.Models;
+
+namespace Task2.Services.XLSXFileManagers
 {
     public interface IXLSXFileManager
     {
-        void SaveAndUploadToDataBase(IFormFile uploadedFile, string path);
+        Task SaveAndUploadToDataBaseAsync(IFormFile uploadedFile, string folderPath);
+
+        IEnumerable<XLSXFile> GetAllFiles();
     }
 }

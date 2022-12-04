@@ -9,24 +9,32 @@ namespace Task2.Controllers
     public class FileController : Controller
     {
         private readonly IWebHostEnvironment _appEnvironment;
-        private readonly IXLSXFileManager _xlsFileManager;
+        private readonly IXLSXFileManager _xlsxFileManager;
 
         public FileController(IWebHostEnvironment appEnvironment, IXLSXFileManager xlsFileManager)
         {
             _appEnvironment = appEnvironment;
-            _xlsFileManager = xlsFileManager;
+            _xlsxFileManager = xlsFileManager;
         }
 
         [HttpPost]
-        public IActionResult Upload(IFormFile uploadedFile)
+        public async Task<IActionResult> UploadAsync(IFormFile uploadedFile)
         {
             if (uploadedFile != null)
             {
-                string path = "/Files/" + uploadedFile.FileName;
+                string folderPath = $"{_appEnvironment.WebRootPath}/Files/";
 
-                _xlsFileManager.SaveAndUploadToDataBase(uploadedFile, _appEnvironment.WebRootPath + path);
+                await _xlsxFileManager.SaveAndUploadToDataBaseAsync(uploadedFile, folderPath);
             }
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult AllFiles()
+        {
+            var files = _xlsxFileManager.GetAllFiles();
+
+            return View(files);
         }
 
         [HttpGet]

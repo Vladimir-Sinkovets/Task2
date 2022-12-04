@@ -7,8 +7,8 @@ namespace Task2.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        public DbSet<Record> Records { get; }
-        public DbSet<XLSXFile> Files { get; }
+        public DbSet<Record> Records { get; set; }
+        public DbSet<XLSXFile> Files { get; set; }
 
     }
 }

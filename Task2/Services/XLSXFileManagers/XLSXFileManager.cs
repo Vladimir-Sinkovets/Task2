@@ -14,24 +14,40 @@ namespace Task2.Services.XLSXFileManagers
             _context = context;
         }
 
-        public void SaveAndUploadToDataBase(IFormFile uploadedFile, string path)
-        {
-            var xlsxPath = SaveFile(uploadedFile, path);
 
-            UploadToDatabase(xlsxPath);
+        public async Task SaveAndUploadToDataBaseAsync(IFormFile uploadedFile, string folderPath)
+        {
+            var fileName = SaveFile(uploadedFile, folderPath);
+
+            await UploadToDatabaseAsync(fileName);
+        }
+        public IEnumerable<XLSXFile> GetAllFiles()
+        {
+            return _context.Files;
         }
 
-        private void UploadToDatabase(string fileName)
+
+
+        private async Task UploadToDatabaseAsync(string fileName)
         {
-            var excelFile = new ExcelPackage(new FileInfo(fileName));
+            var records = GetAllRecordsFromFile(fileName);
+
+            await _context.Records.AddRangeAsync(records);
+
+            _context.SaveChanges();
+        }
+
+        private IEnumerable<Record> GetAllRecordsFromFile(string fileName)
+        {
+            var file = _context.Files.FirstOrDefault(f => f.Name == fileName);
+
+            var excelFile = new ExcelPackage(new FileInfo(file.Path));
 
             var worksheet = excelFile.Workbook.Worksheets[0];
 
             var totalRows = worksheet.Dimension.End.Row;
 
-            var list = new List<Record>();
-
-            string currentClass = (string) worksheet.Cells[9, 1].Value;
+            string currentClass = (string)worksheet.Cells[9, 1].Value;
 
             for (int i = 10; i < totalRows; i++)
             {
@@ -53,28 +69,38 @@ namespace Task2.Services.XLSXFileManagers
                 if ((string)A == "ПО КЛАССУ" || (string)A == "БАЛАНС")
                     continue;
 
-
-                list.Add(new Record() 
+                yield return new Record()
                 {
                     ClassName = currentClass,
-                    Account = (string) A,
-                    OpeningBalanceAsset = (double) B,
-                    OpeningBalanceLiabilities = (double) C,
-                    TurnoverDebit = (double) D,
-                    TurnoverCredit = (double) E,
-                });
+                    Account = (string)A,
+                    OpeningBalanceAsset = (double)B,
+                    OpeningBalanceLiabilities = (double)C,
+                    TurnoverDebit = (double)D,
+                    TurnoverCredit = (double)E,
+                    FileId = file.Id,
+                };
             }
         }
 
-        private string SaveFile(IFormFile uploadedFile, string path)
+        private string SaveFile(IFormFile uploadedFile, string folderPath)
         {
             var workbook = new Workbook(uploadedFile.OpenReadStream());
 
-            using var fileStream = new FileStream(path + "x", FileMode.Create);
+            var newName = $"_{Guid.NewGuid()}_{uploadedFile.FileName}x";
+
+            using var fileStream = new FileStream(folderPath + newName, FileMode.Create);
 
             workbook.Save(fileStream, SaveFormat.Xlsx);
 
-            return path + "x";
+            _context.Files.Add(new XLSXFile()
+            {
+                Path = fileStream.Name,
+                Name = newName,
+            });
+
+            _context.SaveChanges();
+
+            return newName;
         }
     }
 }
