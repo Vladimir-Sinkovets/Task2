@@ -5,10 +5,7 @@ namespace Task2.Data
 {
     public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        {
-
-        }
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<Record> Records { get; }
         public DbSet<XLSXFile> Files { get; }
