@@ -1,5 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
-using Task2.Services.XLSXFileManagers;
+using Task2.Data;
 using Task2.Services.XLSXFileManagers;
 
 namespace Task2
@@ -12,12 +13,26 @@ namespace Task2
 
             var builder = WebApplication.CreateBuilder(args);
 
+
+
+
             // Add services to the container.
+
+            string connection = builder.Configuration.GetConnectionString("DefaultConnection");
+
+            builder.Services.AddDbContext<ApplicationDbContext>(opt =>
+            {
+                opt.UseSqlServer(connection);
+            });
+
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddTransient<IXLSXFileManager, XLSXFileManager>();
 
             var app = builder.Build();
+
+
+
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

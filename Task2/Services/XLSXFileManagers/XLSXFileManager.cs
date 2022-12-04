@@ -1,11 +1,19 @@
-﻿using Task2.Services.XLSXFileManagers.Models;
-using OfficeOpenXml;
+﻿using OfficeOpenXml;
 using Aspose.Cells;
+using Task2.Models;
+using Task2.Data;
 
 namespace Task2.Services.XLSXFileManagers
 {
     public class XLSXFileManager : IXLSXFileManager
     {
+        private readonly ApplicationDbContext _context;
+
+        public XLSXFileManager(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         public void SaveAndUploadToDataBase(IFormFile uploadedFile, string path)
         {
             var xlsxPath = SaveFile(uploadedFile, path);

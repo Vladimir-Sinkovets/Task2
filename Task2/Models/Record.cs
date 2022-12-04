@@ -1,6 +1,6 @@
-﻿namespace Task2.Services.XLSXFileManagers.Models
+﻿namespace Task2.Models
 {
-    internal class Record
+    public class Record
     {
         public string Account { get; set; }
         public string ClassName { get; set; }
