@@ -1,0 +1,12 @@
+﻿@model IEnumerable<ExcelFile>
+
+<table class="table">
+    @foreach (var file in Model)
+    {
+    <tr>
+        <td>
+            <a asp-action="File" asp-controller="file" asp-route-fileId="@file.Id">@file.Name[38..]</a>
+        </td>
+    </tr>
+    }
+</table>

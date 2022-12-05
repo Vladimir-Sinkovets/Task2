@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 using Task2.Data;
-using Task2.Services.XLSXFileManagers;
+using Task2.Services.ExcelFileManagers.Options;
+using Task2.Services.ExcelFileManagers;
 
 namespace Task2
 {
@@ -25,9 +26,11 @@ namespace Task2
                 opt.UseSqlServer(connection);
             });
 
+            builder.Services.Configure<FilesSaveSettings>(builder.Configuration.GetSection("FilesSaveSettings"));
+
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddTransient<IXLSXFileManager, XLSXFileManager>();
+            builder.Services.AddTransient<IExcelFileManager, ExcelFileManager>();
 
             var app = builder.Build();
 

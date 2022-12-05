@@ -1,20 +1,16 @@
-﻿using Aspose.Cells;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.IO;
-using Task2.Services.XLSXFileManagers;
+﻿using Microsoft.AspNetCore.Mvc;
+using Task2.Models;
+using Task2.Services.ExcelFileManagers;
 
 namespace Task2.Controllers
 {
     public class FileController : Controller
     {
-        private readonly IWebHostEnvironment _appEnvironment;
-        private readonly IXLSXFileManager _xlsxFileManager;
+        private readonly IExcelFileManager _excelFileManager;
 
-        public FileController(IWebHostEnvironment appEnvironment, IXLSXFileManager xlsFileManager)
+        public FileController(IExcelFileManager excelFileManager)
         {
-            _appEnvironment = appEnvironment;
-            _xlsxFileManager = xlsFileManager;
+            _excelFileManager = excelFileManager;
         }
 
         [HttpPost]
@@ -22,19 +18,26 @@ namespace Task2.Controllers
         {
             if (uploadedFile != null)
             {
-                string folderPath = $"{_appEnvironment.WebRootPath}/Files/";
-
-                await _xlsxFileManager.SaveAndUploadToDataBaseAsync(uploadedFile, folderPath);
+                await _excelFileManager.SaveAndUploadToDataBaseAsync(uploadedFile);
             }
+
             return View();
         }
 
         [HttpGet]
         public IActionResult AllFiles()
         {
-            var files = _xlsxFileManager.GetAllFiles();
+            var files = _excelFileManager.GetAllFiles();
 
             return View(files);
+        }
+
+        [HttpGet]
+        public IActionResult File(int fileId)
+        {
+            var viewModel = _excelFileManager.GetRecordViewItemsForFile(fileId);
+
+            return View(viewModel);
         }
 
         [HttpGet]

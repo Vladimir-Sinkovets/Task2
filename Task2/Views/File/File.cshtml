@@ -1,0 +1,66 @@
+﻿@model IEnumerable<RecordViewItem>
+
+@{
+    string currentClass = "";
+    string TrClassName(RecordViewItem record)
+    {
+        if (record.Col1.Length == 2)
+            return " table-primary";
+        else if (record.Col1 == "ПО КЛАССУ")
+            return " table-warning";
+        else
+            return string.Empty;
+    }
+}
+<table class="table table-sm table-striped">
+    <tr>
+        <th> </th>
+        <th style="text-align:center;" colspan="2">Входящее сальдо</th>
+        <th style="text-align:center;" colspan="2">Обороты</th>
+        <th style="text-align:center;" colspan="2">Исходящее сальдо</th>
+    </tr>
+    <tr>
+        <th style="text-align:center;">б/сч</th>
+        <th style="text-align:center;">Актив</th>
+        <th style="text-align:center;">Пассив</th>
+        <th style="text-align:center;">Дебет</th>
+        <th style="text-align:center;">Кредит</th>
+        <th style="text-align:center;">Актив</th>
+        <th style="text-align:center;">Пассив</th>
+    </tr>
+    @foreach (var record in Model)
+    {
+        @if(record.ClassName != currentClass)
+        {
+            currentClass = record.ClassName;
+            <tr>
+                <td colspan="7" style="text-align:center">
+                    <strong>@record.ClassName</strong>
+                </td>
+            </tr>
+        }
+        <tr class="@TrClassName(record)">
+            <td>
+                @record.Col1
+            </td>
+            <td style="text-align:right;">
+                @string.Format("{0:F2}", record.OpeningBalanceAsset)
+            </td>
+            <td style="text-align:right;">
+                @string.Format("{0:F2}", record.OpeningBalanceLiabilities)
+            </td>
+            <td style="text-align:right;">
+                @string.Format("{0:F2}", record.TurnoverDebit)
+            </td>
+            <td style="text-align:right;">
+                @string.Format("{0:F2}", record.TurnoverCredit)
+            </td>
+            <td style="text-align:right;">
+                @string.Format("{0:F2}", record.FinalBalanceAsset)
+            </td>
+            <td style="text-align:right;">
+                @string.Format("{0:F2}", record.FinalBalanceLiabilities)
+            </td>
+        </tr>
+    }
+</table>
