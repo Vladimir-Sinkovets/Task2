@@ -54,7 +54,7 @@ namespace Task2.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Records");
+                    b.ToTable("Records", (string)null);
                 });
 
             modelBuilder.Entity("Task2.Models.XLSXFile", b =>
@@ -75,7 +75,7 @@ namespace Task2.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Files");
+                    b.ToTable("Files", (string)null);
                 });
 #pragma warning restore 612, 618
         }

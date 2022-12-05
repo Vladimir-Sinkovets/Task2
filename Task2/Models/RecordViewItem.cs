@@ -1,9 +1,9 @@
 ﻿namespace Task2.Models
 {
-    public class RecordViewModel
+    public class RecordViewItem
     {
-        public string Col1 { get; set; }
-        public string ClassName { get; set; }
+        public string? Col1 { get; set; }
+        public string? ClassName { get; set; }
         
         public double OpeningBalanceLiabilities { get; set; }
         public double OpeningBalanceAsset { get; set; }
